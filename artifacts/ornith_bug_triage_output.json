@@ -1,0 +1,163 @@
+{
+  "exercise": "structured_bug_report_triage",
+  "backend": "local_lm_studio",
+  "model": "ornith-1.0-9b",
+  "base_url": "http://127.0.0.1:1234/v1",
+  "cases": [
+    {
+      "report": {
+        "report_id": "AUTH-101",
+        "text": "After an access token expires, every tenant receives HTTP 500 from the refresh endpoint and users cannot sign in again.",
+        "expected_component": "authentication",
+        "expected_severity": "high"
+      },
+      "model_result": {
+        "report_id": "AUTH-101",
+        "component": "authentication",
+        "severity": "critical",
+        "summary": "After an access token expires, every tenant receives an HTTP 500 error from the refresh endpoint, preventing all users across all tenants from signing in again.",
+        "next_action": "Inspect server-side application logs generated during the token expiration event to identify the specific exception or failure mode causing the HTTP 500 response on the refresh endpoint.",
+        "confidence": 0.9
+      },
+      "evaluation": {
+        "schema_valid": true,
+        "component_correct": true,
+        "severity_correct": false
+      },
+      "elapsed_seconds": 11.034,
+      "usage": {
+        "completion_tokens": 933,
+        "prompt_tokens": 116,
+        "total_tokens": 1049,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 812,
+          "rejected_prediction_tokens": null,
+          "text_tokens": null
+        },
+        "prompt_tokens_details": null
+      },
+      "error": null
+    },
+    {
+      "report": {
+        "report_id": "PAY-201",
+        "text": "A customer can be charged twice by clicking Retry after checkout times out, even though the first payment succeeded.",
+        "expected_component": "payments",
+        "expected_severity": "high"
+      },
+      "model_result": {
+        "report_id": "PAY-201",
+        "component": "payments",
+        "severity": "high",
+        "summary": "The payment system lacks idempotency protection in the retry flow. When a checkout session times out but the initial charge has already succeeded, clicking 'Retry' triggers a second successful charge against the customer's account instead of detecting the existing transaction state.",
+        "next_action": "Query server-side logs and transaction records for instances where a 'Retry' action occurred after a timeout event on an order that contains a prior successful charge record; verify whether two distinct charge IDs were generated for the same customer session.",
+        "confidence": 0.95
+      },
+      "evaluation": {
+        "schema_valid": true,
+        "component_correct": true,
+        "severity_correct": true
+      },
+      "elapsed_seconds": 16.23,
+      "usage": {
+        "completion_tokens": 1402,
+        "prompt_tokens": 112,
+        "total_tokens": 1514,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 1248,
+          "rejected_prediction_tokens": null,
+          "text_tokens": null
+        },
+        "prompt_tokens_details": null
+      },
+      "error": null
+    },
+    {
+      "report": {
+        "report_id": "UI-301",
+        "text": "The settings tooltip misspells the word synchronization.",
+        "expected_component": "frontend",
+        "expected_severity": "low"
+      },
+      "model_result": {
+        "report_id": "UI-301",
+        "component": "frontend",
+        "severity": "low",
+        "summary": "A spelling error exists in the text content displayed within the settings tooltip for synchronization.",
+        "next_action": "Search the codebase or localization files for the string literal associated with the synchronization tooltip and verify the correct spelling of 'synchronization'.",
+        "confidence": 0.95
+      },
+      "evaluation": {
+        "schema_valid": true,
+        "component_correct": true,
+        "severity_correct": true
+      },
+      "elapsed_seconds": 14.758,
+      "usage": {
+        "completion_tokens": 1270,
+        "prompt_tokens": 101,
+        "total_tokens": 1371,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 1169,
+          "rejected_prediction_tokens": null,
+          "text_tokens": null
+        },
+        "prompt_tokens_details": null
+      },
+      "error": null
+    },
+    {
+      "report": {
+        "report_id": "DATA-401",
+        "text": "The nightly export omits records created between 00:00 and 00:05 UTC, but the records remain available in the application.",
+        "expected_component": "data",
+        "expected_severity": "medium"
+      },
+      "model_result": {
+        "report_id": "DATA-401",
+        "component": "data",
+        "severity": "high",
+        "summary": "The nightly export process fails to include records created within a specific UTC time window (00:00–00:05), while those same records remain intact and accessible in the live application. This indicates a discrepancy between the export query logic and the actual data timestamps during that period.",
+        "next_action": "Query the primary database directly for records created between 00:00 and 00:05 UTC on a recent date, then cross-reference against the last successful nightly export output to identify which specific records are missing and whether the export query uses an inclusive/exclusive boundary or timezone conversion.",
+        "confidence": 0.9
+      },
+      "evaluation": {
+        "schema_valid": true,
+        "component_correct": true,
+        "severity_correct": false
+      },
+      "elapsed_seconds": 17.488,
+      "usage": {
+        "completion_tokens": 1509,
+        "prompt_tokens": 123,
+        "total_tokens": 1632,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 1333,
+          "rejected_prediction_tokens": null,
+          "text_tokens": null
+        },
+        "prompt_tokens_details": null
+      },
+      "error": null
+    }
+  ],
+  "summary": {
+    "total_cases": 4,
+    "completed_cases": 4,
+    "schema_valid_cases": 4,
+    "component_correct_cases": 4,
+    "severity_correct_cases": 2,
+    "elapsed_seconds": 59.51,
+    "total_tokens": 5566,
+    "marginal_hosted_api_cost_usd": 0,
+    "local_cost_note": "The API charge is zero; hardware, electricity, and developer time are outside this simple benchmark."
+  }
+}
