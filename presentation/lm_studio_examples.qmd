@@ -1,0 +1,568 @@
+---
+title: "Local models as a practical development tool"
+subtitle: "Seven working examples with LM Studio and Ornith 1.0 9B"
+author: "LM Studio Test Cases"
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    width: 1280
+    height: 720
+    margin: 0.055
+    center: false
+    transition: fade
+    background-transition: fade
+    controls: true
+    progress: true
+    slide-number: true
+    hash: true
+    history: true
+    code-overflow: wrap
+    code-line-numbers: false
+    highlight-style: github-dark
+    embed-resources: false
+    footer: "github.com/scschwa/lm-studio-test-cases"
+execute:
+  enabled: false
+---
+
+## The useful question is where local inference fits
+
+<div class="lead">
+Local models are most useful when the work is frequent, bounded, measurable,
+and safe to verify in ordinary code.
+</div>
+
+<div class="flow">
+Developer request <span class="arrow">→</span> Local model
+<span class="arrow">→</span> Deterministic validation
+<span class="arrow">→</span> Artifact or escalation
+</div>
+
+- **Save time:** automate repetitive first passes during development.
+- **Control spend:** reserve hosted calls for cases that need them.
+- **Keep boundaries clear:** the model proposes; trusted code validates and acts.
+
+::: {.notes}
+[Sources]
+- Project scripts and committed artifacts in this repository.
+:::
+
+## One setup powers every example
+
+:::: {.columns}
+::: {.column width="48%"}
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://127.0.0.1:1234/v1",
+    api_key="lm-studio",
+)
+```
+
+:::
+::: {.column width="48%"}
+
+1. Load `ornith-1.0-9b` in LM Studio.
+2. Start the local API server.
+3. Install the Python client.
+4. Run the examples from the terminal.
+
+```powershell
+python -m pip install -r requirements.txt
+```
+
+:::
+::::
+
+<div class="result">
+The OpenAI-compatible client stays the same. The base URL determines whether
+the request goes to LM Studio or a hosted provider.
+</div>
+
+::: {.notes}
+[Sources]
+- `README.md`
+- `ornith_prime_exercise.py`
+:::
+
+## Example 1 starts with one explicit request
+
+<div class="eyebrow">Problem and purpose</div>
+
+The first exercise needed a low-frills Python submission that sends one prompt
+to Ornith and returns a reusable payload instead of starting a chat loop.
+
+```python
+completion = client.chat.completions.create(
+    model=MODEL,
+    messages=[{"role": "user", "content": PROMPT}],
+    temperature=0.2,
+)
+```
+
+```python
+return {
+    "request": {"model": MODEL, "prompt": PROMPT},
+    "response": {
+        "content": choice.message.content,
+        "finish_reason": choice.finish_reason,
+        "usage": usage.model_dump(),
+    },
+}
+```
+
+::: {.notes}
+[Sources]
+- `ornith_prime_exercise.py`
+:::
+
+## Example 1 preserves the answer and its context
+
+:::: {.columns}
+::: {.column width="56%"}
+
+```json
+{
+  "model": "ornith-1.0-9b",
+  "finish_reason": "stop",
+  "usage": {
+    "prompt_tokens": 36,
+    "completion_tokens": 1265,
+    "total_tokens": 1301
+  }
+}
+```
+
+:::
+::: {.column width="40%"}
+
+**Model output begins:**
+
+> Annotated R Function: Nearest Primes Using Tidyverse Syntax
+
+The payload makes the run reproducible enough to inspect: prompt, model,
+answer, stop reason, and usage travel together.
+
+:::
+::::
+
+<div class="lesson">Lesson: return structured evidence, not only generated text.</div>
+
+::: {.notes}
+[Sources]
+- `artifacts/ornith_prime_exercise_output.json`
+:::
+
+## Example 2 turns stateless calls into a conversation
+
+<div class="eyebrow">Problem and purpose</div>
+
+The terminal app needed back-and-forth chat without adding a database,
+framework, or graphical interface.
+
+```python
+messages = [
+    {"role": "system", "content": SYSTEM_PROMPT}
+]
+
+messages.append({"role": "user", "content": user_text})
+assistant_text = request_reply(client, messages)
+messages.append(
+    {"role": "assistant", "content": assistant_text}
+)
+```
+
+The API does not remember earlier requests. Resending the accumulated list is
+what gives the model conversational context.
+
+::: {.notes}
+[Sources]
+- `ornith_terminal_chat.py`
+:::
+
+## Example 2 proves that history is carried forward
+
+```text
+You: Reply with exactly the word BLUE.
+Ornith: BLUE
+
+You: What word did I ask you to reply with?
+     Reply with only that word.
+Ornith: BLUE
+```
+
+<div class="result">
+The two-turn smoke test confirmed that the second request included the first
+user message and assistant response.
+</div>
+
+- History exists only in memory and disappears when the process ends.
+- Every turn resends prior messages, increasing context size and processing time.
+- `exit`, `quit`, Ctrl+C, and EOF end the session cleanly.
+
+::: {.notes}
+[Sources]
+- `ornith_terminal_chat.py`
+- Project smoke test executed before commit `6a94131`.
+:::
+
+## Example 3 makes bug triage measurable
+
+<div class="eyebrow">Problem and purpose</div>
+
+Bug triage is repetitive, but a free-form answer is difficult to evaluate or
+feed into another system. The benchmark requires known labels and valid JSON.
+
+```python
+completion = client.chat.completions.create(
+    model=MODEL,
+    messages=[
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "user", "content": build_prompt(report)},
+    ],
+    response_format=TRIAGE_RESPONSE_FORMAT,
+    temperature=0.1,
+)
+```
+
+The schema constrains component, severity, summary, next action, and confidence.
+
+::: {.notes}
+[Sources]
+- `ornith_bug_triage.py`
+:::
+
+## Example 3 separates formatting success from judgment
+
+:::: {.columns}
+::: {.column width="47%"}
+
+<div class="result">
+
+**4 / 4** schema-valid responses<br>
+**4 / 4** component labels correct<br>
+**2 / 4** severity labels correct<br>
+**59.51 s** total elapsed time<br>
+**5,566** total tokens
+
+</div>
+
+:::
+::: {.column width="49%"}
+
+```json
+"summary": {
+  "schema_valid_cases": 4,
+  "component_correct_cases": 4,
+  "severity_correct_cases": 2
+}
+```
+
+The model followed the requested structure reliably but disagreed with half of
+the benchmark severity labels.
+
+:::
+::::
+
+<div class="lesson">Lesson: valid JSON does not guarantee a correct decision.</div>
+
+::: {.notes}
+[Sources]
+- `artifacts/ornith_bug_triage_output.json`
+:::
+
+## Example 4 generates tests without executing model code
+
+<div class="eyebrow">Problem and purpose</div>
+
+Developers need edge-case ideas, but directly executing arbitrary generated
+Python adds unnecessary risk. Ornith generates test data; trusted functions run it.
+
+```python
+def execute_case(test_case, buggy_function,
+                 reference_function):
+    args = test_case.get("args", [])
+    expected = test_case.get("expected")
+
+    reference_result = reference_function(*args)
+    buggy_result = buggy_function(*args)
+
+    return {
+        "expected_is_correct": expected == reference_result,
+        "detects_bug": buggy_result != expected,
+    }
+```
+
+::: {.notes}
+[Sources]
+- `ornith_unit_test_generation.py`
+:::
+
+## Example 4 turns generation into an objective test
+
+<div class="result">
+
+**2 / 2** deliberately defective functions exposed<br>
+**10 / 10** generated cases runnable<br>
+**10 / 10** expected values correct<br>
+**4** individual cases detected a planted bug<br>
+**16.36 s** total elapsed time
+
+</div>
+
+```json
+{
+  "tasks_that_caught_planted_bug": 2,
+  "generated_cases": 10,
+  "cases_with_correct_expected_value": 10,
+  "bug_detecting_cases": 4
+}
+```
+
+<div class="lesson">Lesson: use the model for candidates and ordinary code for truth.</div>
+
+::: {.notes}
+[Sources]
+- `artifacts/ornith_unit_test_generation_output.json`
+:::
+
+## Example 5 keeps tool execution under application control
+
+<div class="eyebrow">Problem and purpose</div>
+
+The benchmark asks whether Ornith can choose a tool and construct arguments.
+The model requests an action; an explicit allowlist decides what may run.
+
+```python
+TOOL_FUNCTIONS = {
+    "lookup_issue": lookup_issue,
+    "run_test_file": run_test_file,
+    "calculate_shipping": calculate_shipping,
+}
+
+function = TOOL_FUNCTIONS.get(call["name"])
+if function is not None:
+    result = function(**call["arguments"])
+```
+
+Tool schemas describe parameters, while the Python dispatch table remains the
+security boundary.
+
+::: {.notes}
+[Sources]
+- `ornith_tool_calling_benchmark.py`
+:::
+
+## Example 5 handles single, multiple, and no-tool cases
+
+:::: {.columns}
+::: {.column width="48%"}
+
+```json
+{
+  "total_cases": 5,
+  "tool_name_correct_cases": 5,
+  "exact_call_correct_cases": 5,
+  "parse_error_count": 0,
+  "executed_tool_calls": 5
+}
+```
+
+:::
+::: {.column width="48%"}
+
+The five cases covered:
+
+- Issue lookup
+- Test-file execution
+- Shipping calculation
+- Two tools in one request
+- A normal answer with no tool
+
+**Elapsed:** 6.30 seconds
+
+:::
+::::
+
+<div class="lesson">Lesson: narrow tools and exact schemas make behavior testable.</div>
+
+::: {.notes}
+[Sources]
+- `artifacts/ornith_tool_calling_benchmark_output.json`
+:::
+
+## Example 6 uses policy to decide when local is enough
+
+<div class="eyebrow">Problem and purpose</div>
+
+A local model can reduce hosted usage even when it is not trusted for every
+case. The application, rather than the model alone, owns the routing policy.
+
+```python
+if assessment["category"] in ALWAYS_ESCALATE_CATEGORIES:
+    reasons.append("always-escalate category")
+if assessment["confidence"] < 0.80:
+    reasons.append("confidence below threshold")
+if assessment["requires_expert_review"]:
+    reasons.append("expert review requested")
+
+selected_backend = "hosted" if reasons else "local"
+```
+
+Security, financial, and architectural work always escalates.
+
+::: {.notes}
+[Sources]
+- `ornith_local_first_escalation.py`
+:::
+
+## Example 6 avoids two of five hosted requests
+
+:::: {.columns}
+::: {.column width="48%"}
+
+**Routing outcome**
+
+- 2 routine cases accepted locally
+- 3 higher-risk cases escalated
+- 5 / 5 local responses valid
+- 4 / 5 local categories correct
+- 5 / 5 hosted categories correct
+
+:::
+::: {.column width="48%"}
+
+```text
+Measured all-hosted:       $0.00062850
+Projected local-first:     $0.00040005
+Projected cost avoided:    $0.00022845
+Hosted requests avoided:   2
+```
+
+That is about **36% less hosted token cost** under the benchmark assumptions.
+
+:::
+::::
+
+<div class="lesson">Lesson: safe routing can tolerate imperfect local classification.</div>
+
+::: {.notes}
+[Sources]
+- `artifacts/ornith_local_first_escalation_output.json`
+- Cost reduction percentage is calculated from values in that artifact.
+:::
+
+## Example 7 turns a prompt into a guided dataset workflow
+
+<div class="eyebrow">Problem and purpose</div>
+
+Dataset creation is iterative: requirements, schema design, revision,
+generation, validation, splitting, and serialization all matter.
+
+<div class="flow small">
+CLI interview <span class="arrow">→</span> Ornith plan
+<span class="arrow">→</span> User approval
+<span class="arrow">→</span> Records
+<span class="arrow">→</span> Python validation
+<span class="arrow">→</span> Files
+</div>
+
+```python
+properties = {
+    field["name"]: field_json_schema(field)
+    for field in plan["fields"]
+}
+
+response_format = build_records_response_format(plan)
+generation = generate_records(client, plan)
+errors = validate_records(generation["records"], plan)
+```
+
+::: {.notes}
+[Sources]
+- `ornith_fake_dataset_creator.py`
+:::
+
+## Example 7 produces files plus a manifest
+
+:::: {.columns}
+::: {.column width="55%"}
+
+```csv
+ticket_id,category,priority,resolved
+1001,billing,high,True
+1002,login,medium,False
+1003,delivery,low,True
+```
+
+:::
+::: {.column width="41%"}
+
+**Smoke-test output**
+
+- 6 validated records
+- 2 CSV files
+- 3 records per file
+- JSON writer passed
+- XML writer passed
+- Manifest preserves plan and usage
+
+The same CLI can create one file or a set of CSV, JSON, or XML files.
+
+:::
+::::
+
+::: {.notes}
+[Sources]
+- `artifacts/ornith_fake_dataset_creator_transcript.txt`
+- `artifacts/generated_datasets/support_ticket_demo_20260821_224415/manifest.json`
+- `artifacts/generated_datasets/support_ticket_demo_20260821_224415/support_ticket_demo_001.csv`
+:::
+
+## The examples share one reusable engineering pattern
+
+| Example | Model contribution | Deterministic control | Measured outcome |
+|---|---|---|---|
+| One-shot | Generate an answer | Preserve payload | 1,301 tokens recorded |
+| Chat | Continue conversation | Maintain history | Prior turn recalled |
+| Bug triage | Classify reports | Schema and labels | 4/4 components |
+| Test generation | Propose cases | Reference functions | 2/2 bugs found |
+| Tool calling | Select actions | Allowlist and exact match | 5/5 calls |
+| Escalation | Assess routine work | Routing policy | 2 calls avoided |
+| Dataset creator | Design and populate | Validate and serialize | 6 valid records |
+
+<div class="lesson">Local value increases when generated output meets ordinary software checks.</div>
+
+::: {.notes}
+[Sources]
+- All committed scripts and artifacts in this repository.
+:::
+
+## Start small, measure, then decide what to route
+
+1. **Choose bounded work** with a clear input and expected output shape.
+2. **Record evidence** such as latency, usage, validity, and task score.
+3. **Validate in code** before generated content changes anything important.
+4. **Escalate by policy** when risk, uncertainty, or complexity is high.
+
+```powershell
+python ornith_prime_exercise.py
+python ornith_terminal_chat.py
+python ornith_bug_triage.py
+python ornith_unit_test_generation.py
+python ornith_tool_calling_benchmark.py
+python ornith_local_first_escalation.py
+python ornith_fake_dataset_creator.py
+```
+
+<div class="result">
+The README contains setup details, launch commands, configuration overrides,
+and artifact locations for every exercise.
+</div>
+
+::: {.notes}
+[Sources]
+- `README.md`
+:::

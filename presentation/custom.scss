@@ -1,0 +1,212 @@
+/*-- scss:defaults --*/
+
+$body-bg: #0b1020;
+$body-color: #e8edf7;
+$link-color: #62d6c5;
+$presentation-heading-color: #f7f9fc;
+$presentation-heading-font: "Segoe UI", "Aptos", sans-serif;
+$font-family-sans-serif: "Segoe UI", "Aptos", sans-serif;
+$font-family-monospace: "Cascadia Code", "Consolas", monospace;
+$code-block-bg: #111a2e;
+$code-block-border-color: #263652;
+
+/*-- scss:rules --*/
+
+.reveal {
+  font-size: 24px;
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal h1 {
+  font-size: 2.55em;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.reveal h2 {
+  font-size: 1.9em;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  margin-bottom: 0.55em;
+}
+
+.reveal h3 {
+  color: #62d6c5;
+  font-size: 1.05em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.reveal p,
+.reveal li {
+  line-height: 1.35;
+}
+
+.reveal strong {
+  color: #ffffff;
+}
+
+.reveal code {
+  color: #d8e6ff;
+}
+
+.reveal pre {
+  border: 1px solid #263652;
+  border-radius: 10px;
+  box-shadow: none;
+  font-size: 0.68em;
+  line-height: 1.25;
+  margin: 0.45em 0;
+  overflow-x: hidden;
+}
+
+.reveal pre code {
+  max-height: 430px;
+  overflow-wrap: anywhere;
+  padding: 0.85em 1em;
+  white-space: pre-wrap;
+}
+
+.reveal div.sourceCode {
+  overflow-x: hidden !important;
+}
+
+.reveal code.sourceCode {
+  overflow-x: hidden !important;
+  white-space: pre-wrap !important;
+}
+
+.reveal .subtitle {
+  color: #a8b5ca;
+  font-size: 1.15em;
+  margin-top: 0.8em;
+}
+
+.reveal .quarto-title-author-name {
+  color: #62d6c5;
+}
+
+.reveal .slide-number,
+.reveal .footer {
+  color: #7f8ca5;
+  font-size: 0.55em;
+}
+
+.accent {
+  color: #62d6c5;
+}
+
+.eyebrow {
+  color: #62d6c5;
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.6em;
+  text-transform: uppercase;
+}
+
+.lead {
+  color: #cbd5e6;
+  font-size: 1.18em;
+  line-height: 1.35;
+  max-width: 980px;
+}
+
+.result {
+  border-left: 6px solid #62d6c5;
+  margin-top: 0.65em;
+  padding: 0.15em 0 0.15em 0.8em;
+}
+
+.result p {
+  margin: 0.25em 0;
+}
+
+.lesson {
+  color: #ffcf70;
+  font-weight: 650;
+  margin-top: 0.65em;
+}
+
+.flow {
+  color: #d5dded;
+  font-size: 1.16em;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  margin: 1.25em 0 0.85em;
+  text-align: center;
+}
+
+.flow .arrow {
+  color: #62d6c5;
+  padding: 0 0.45em;
+}
+
+.muted {
+  color: #9aa8be;
+}
+
+.small {
+  font-size: 0.78em;
+}
+
+.tight li {
+  margin-bottom: 0.3em;
+}
+
+.reveal table {
+  border-collapse: collapse;
+  font-size: 0.74em;
+  margin-top: 0.5em;
+  width: 100%;
+}
+
+.reveal th {
+  color: #62d6c5;
+  font-weight: 700;
+  text-align: left;
+}
+
+.reveal th,
+.reveal td {
+  border-bottom: 1px solid #263652;
+  padding: 0.48em 0.55em;
+  vertical-align: top;
+}
+
+.reveal blockquote {
+  background: transparent;
+  border-left: 5px solid #ffcf70;
+  box-shadow: none;
+  color: #dbe3f1;
+  font-style: normal;
+  margin: 0.7em 0;
+  padding: 0.2em 0.8em;
+  width: auto;
+}
+
+.reveal .columns {
+  align-items: center;
+  gap: 1.3em;
+}
+
+.reveal .column > :first-child {
+  margin-top: 0;
+}
+
+.reveal section.title-slide {
+  text-align: left;
+}
+
+.reveal .progress {
+  color: #62d6c5;
+}
+
+@media (max-width: 900px) {
+  .reveal {
+    font-size: 21px;
+  }
+}
