@@ -1,0 +1,56 @@
+Ornith Fake Dataset Creator
+Describe a fictional dataset, review the plan, then generate files.
+
+Dataset name [sample_dataset]: What will this dataset be used to test?: Output format: csv, json, or xml [csv]: Total number of records [10]: Number of output files [1]: Describe the fields, types, and important allowed values: Additional constraints or edge cases [No additional constraints]: 
+Proposed dataset plan:
+
+{
+  "dataset_name": "support_ticket_demo",
+  "purpose": "Test a customer support dashboard with varied synthetic tickets",
+  "format": "csv",
+  "record_count": 6,
+  "file_count": 2,
+  "fields": [
+    {
+      "name": "ticket_id",
+      "type": "integer",
+      "description": "Unique sequential identifier for each support ticket."
+    },
+    {
+      "name": "category",
+      "type": "string",
+      "description": "Ticket category. Allowed values: billing, login, delivery."
+    },
+    {
+      "name": "priority",
+      "type": "string",
+      "description": "Urgency level. Allowed values: low, medium, high."
+    },
+    {
+      "name": "opened_date",
+      "type": "date",
+      "description": "Date the ticket was created (YYYY-MM-DD format)."
+    },
+    {
+      "name": "resolved",
+      "type": "boolean",
+      "description": "Whether the ticket has been resolved. Allowed values: true, false."
+    },
+    {
+      "name": "summary",
+      "type": "string",
+      "description": "Brief description of the customer issue."
+    }
+  ],
+  "generation_instructions": "Generate two CSV files containing a total of 6 records (3 per file). Ensure all ticket_ids are unique integers. Mix categories, priorities, and resolved statuses across both files. Use fictional scenarios only; do not include real names, emails, addresses, or financial details."
+}
+Enter 'approve', 'quit', or describe a revision [approve]: 
+Generating records with Ornith...
+
+Dataset created successfully.
+Output directory: artifacts\generated_datasets\support_ticket_demo_20260821_224415
+Records: 6
+Files: 2
+  - artifacts\generated_datasets\support_ticket_demo_20260821_224415\support_ticket_demo_001.csv
+  - artifacts\generated_datasets\support_ticket_demo_20260821_224415\support_ticket_demo_002.csv
+Manifest: artifacts\generated_datasets\support_ticket_demo_20260821_224415\manifest.json

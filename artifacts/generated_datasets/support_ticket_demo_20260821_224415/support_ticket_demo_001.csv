@@ -1,0 +1,4 @@
+ticket_id,category,priority,opened_date,resolved,summary
+1001,billing,high,2024-03-15,True,Customer reports incorrect invoice amount on March 2024 statement
+1002,login,medium,2024-03-18,False,Password reset email not received after multiple attempts
+1003,delivery,low,2024-03-22,True,Package tracking shows delayed delivery beyond estimated date

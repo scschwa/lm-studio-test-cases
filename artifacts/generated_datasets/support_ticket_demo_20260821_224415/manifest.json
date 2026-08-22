@@ -1,0 +1,177 @@
+{
+  "exercise": "interactive_fake_dataset_creator",
+  "backend": "local_lm_studio",
+  "model": "ornith-1.0-9b",
+  "base_url": "http://127.0.0.1:1234/v1",
+  "requirements": {
+    "dataset_name": "support_ticket_demo",
+    "purpose": "Test a customer support dashboard with varied synthetic tickets",
+    "format": "csv",
+    "record_count": 6,
+    "file_count": 2,
+    "field_description": "ticket_id integer unique; category string chosen from billing, login, or delivery; priority string chosen from low, medium, or high; opened_date date; resolved boolean; summary string",
+    "constraints": "Use fictional cases and include a mix of priorities and resolved values."
+  },
+  "approved_plan": {
+    "dataset_name": "support_ticket_demo",
+    "purpose": "Test a customer support dashboard with varied synthetic tickets",
+    "format": "csv",
+    "record_count": 6,
+    "file_count": 2,
+    "fields": [
+      {
+        "name": "ticket_id",
+        "type": "integer",
+        "description": "Unique sequential identifier for each support ticket."
+      },
+      {
+        "name": "category",
+        "type": "string",
+        "description": "Ticket category. Allowed values: billing, login, delivery."
+      },
+      {
+        "name": "priority",
+        "type": "string",
+        "description": "Urgency level. Allowed values: low, medium, high."
+      },
+      {
+        "name": "opened_date",
+        "type": "date",
+        "description": "Date the ticket was created (YYYY-MM-DD format)."
+      },
+      {
+        "name": "resolved",
+        "type": "boolean",
+        "description": "Whether the ticket has been resolved. Allowed values: true, false."
+      },
+      {
+        "name": "summary",
+        "type": "string",
+        "description": "Brief description of the customer issue."
+      }
+    ],
+    "generation_instructions": "Generate two CSV files containing a total of 6 records (3 per file). Ensure all ticket_ids are unique integers. Mix categories, priorities, and resolved statuses across both files. Use fictional scenarios only; do not include real names, emails, addresses, or financial details."
+  },
+  "planning_runs": [
+    {
+      "raw_plan": {
+        "dataset_name": "support_ticket_demo",
+        "purpose": "Test a customer support dashboard with varied synthetic tickets",
+        "format": "csv",
+        "record_count": 6,
+        "file_count": 2,
+        "fields": [
+          {
+            "name": "ticket_id",
+            "type": "integer",
+            "description": "Unique sequential identifier for each support ticket."
+          },
+          {
+            "name": "category",
+            "type": "string",
+            "description": "Ticket category. Allowed values: billing, login, delivery."
+          },
+          {
+            "name": "priority",
+            "type": "string",
+            "description": "Urgency level. Allowed values: low, medium, high."
+          },
+          {
+            "name": "opened_date",
+            "type": "date",
+            "description": "Date the ticket was created (YYYY-MM-DD format)."
+          },
+          {
+            "name": "resolved",
+            "type": "boolean",
+            "description": "Whether the ticket has been resolved. Allowed values: true, false."
+          },
+          {
+            "name": "summary",
+            "type": "string",
+            "description": "Brief description of the customer issue."
+          }
+        ],
+        "generation_instructions": "Generate two CSV files containing a total of 6 records (3 per file). Ensure all ticket_ids are unique integers. Mix categories, priorities, and resolved statuses across both files. Use fictional scenarios only; do not include real names, emails, addresses, or financial details."
+      },
+      "normalized_plan": {
+        "dataset_name": "support_ticket_demo",
+        "purpose": "Test a customer support dashboard with varied synthetic tickets",
+        "format": "csv",
+        "record_count": 6,
+        "file_count": 2,
+        "fields": [
+          {
+            "name": "ticket_id",
+            "type": "integer",
+            "description": "Unique sequential identifier for each support ticket."
+          },
+          {
+            "name": "category",
+            "type": "string",
+            "description": "Ticket category. Allowed values: billing, login, delivery."
+          },
+          {
+            "name": "priority",
+            "type": "string",
+            "description": "Urgency level. Allowed values: low, medium, high."
+          },
+          {
+            "name": "opened_date",
+            "type": "date",
+            "description": "Date the ticket was created (YYYY-MM-DD format)."
+          },
+          {
+            "name": "resolved",
+            "type": "boolean",
+            "description": "Whether the ticket has been resolved. Allowed values: true, false."
+          },
+          {
+            "name": "summary",
+            "type": "string",
+            "description": "Brief description of the customer issue."
+          }
+        ],
+        "generation_instructions": "Generate two CSV files containing a total of 6 records (3 per file). Ensure all ticket_ids are unique integers. Mix categories, priorities, and resolved statuses across both files. Use fictional scenarios only; do not include real names, emails, addresses, or financial details."
+      },
+      "revision_notes": [],
+      "elapsed_seconds": 21.933,
+      "usage": {
+        "completion_tokens": 1930,
+        "prompt_tokens": 211,
+        "total_tokens": 2141,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 1563,
+          "rejected_prediction_tokens": null,
+          "text_tokens": null
+        },
+        "prompt_tokens_details": null
+      }
+    }
+  ],
+  "generation": {
+    "elapsed_seconds": 10.13,
+    "usage": {
+      "completion_tokens": 902,
+      "prompt_tokens": 449,
+      "total_tokens": 1351,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 441,
+        "rejected_prediction_tokens": null,
+        "text_tokens": null
+      },
+      "prompt_tokens_details": null
+    },
+    "record_count": 6,
+    "validation_passed": true,
+    "validation_errors": []
+  },
+  "output_files": [
+    "artifacts\\generated_datasets\\support_ticket_demo_20260821_224415\\support_ticket_demo_001.csv",
+    "artifacts\\generated_datasets\\support_ticket_demo_20260821_224415\\support_ticket_demo_002.csv"
+  ]
+}

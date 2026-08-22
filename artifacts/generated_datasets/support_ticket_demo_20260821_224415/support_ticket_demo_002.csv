@@ -1,0 +1,4 @@
+ticket_id,category,priority,opened_date,resolved,summary
+2001,billing,medium,2024-03-25,False,Subscription renewal charged twice in same billing cycle
+2002,login,high,2024-03-28,True,Account locked after multiple failed login attempts
+2003,delivery,low,2024-04-01,False,Wrong item received in delivered package
