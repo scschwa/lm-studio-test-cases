@@ -1,0 +1,273 @@
+{
+  "exercise": "unit_test_generation_and_bug_detection",
+  "backend": "local_lm_studio",
+  "model": "ornith-1.0-9b",
+  "base_url": "http://127.0.0.1:1234/v1",
+  "safety_note": "The model generated test data only. This program did not execute arbitrary source code produced by the model.",
+  "tasks": [
+    {
+      "task": {
+        "task_id": "leap_year",
+        "function_name": "is_leap_year",
+        "argument_names": [
+          "year"
+        ],
+        "expected_type": "boolean",
+        "specification": "Return True for Gregorian leap years. A year divisible by 4 is a leap year, except a year divisible by 100 is not, unless it is also divisible by 400.",
+        "buggy_source": "def is_leap_year(year):\n    return year % 4 == 0"
+      },
+      "cases": [
+        {
+          "generated_test": {
+            "name": "normal_leap_year",
+            "args": [
+              2024
+            ],
+            "expected": true,
+            "reason": "Divisible by 4 and not by 100 — standard leap year"
+          },
+          "evaluation": {
+            "runnable": true,
+            "reference_result": true,
+            "buggy_result": true,
+            "expected_is_correct": true,
+            "detects_bug": false,
+            "error": null
+          }
+        },
+        {
+          "generated_test": {
+            "name": "non_leap_year_not_div_by_4",
+            "args": [
+              2023
+            ],
+            "expected": false,
+            "reason": "Not divisible by 4 — clearly a non-leap year"
+          },
+          "evaluation": {
+            "runnable": true,
+            "reference_result": false,
+            "buggy_result": false,
+            "expected_is_correct": true,
+            "detects_bug": false,
+            "error": null
+          }
+        },
+        {
+          "generated_test": {
+            "name": "century_year_divisible_by_400",
+            "args": [
+              2000
+            ],
+            "expected": true,
+            "reason": "Divisible by 100 and 400 — exception to the century rule"
+          },
+          "evaluation": {
+            "runnable": true,
+            "reference_result": true,
+            "buggy_result": true,
+            "expected_is_correct": true,
+            "detects_bug": false,
+            "error": null
+          }
+        },
+        {
+          "generated_test": {
+            "name": "century_year_not_divisible_by_400",
+            "args": [
+              1900
+            ],
+            "expected": false,
+            "reason": "Divisible by 100 but not 400 — must NOT be a leap year"
+          },
+          "evaluation": {
+            "runnable": true,
+            "reference_result": false,
+            "buggy_result": true,
+            "expected_is_correct": true,
+            "detects_bug": true,
+            "error": null
+          }
+        },
+        {
+          "generated_test": {
+            "name": "future_century_year_not_divisible_by_400",
+            "args": [
+              2100
+            ],
+            "expected": false,
+            "reason": "Divisible by 100 but not 400 — same century rule as 1900"
+          },
+          "evaluation": {
+            "runnable": true,
+            "reference_result": false,
+            "buggy_result": true,
+            "expected_is_correct": true,
+            "detects_bug": true,
+            "error": null
+          }
+        }
+      ],
+      "elapsed_seconds": 9.103,
+      "usage": {
+        "completion_tokens": 767,
+        "prompt_tokens": 141,
+        "total_tokens": 908,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 426,
+          "rejected_prediction_tokens": null,
+          "text_tokens": null
+        },
+        "prompt_tokens_details": null
+      },
+      "caught_planted_bug": true,
+      "error": null
+    },
+    {
+      "task": {
+        "task_id": "inclusive_clamp",
+        "function_name": "clamp",
+        "argument_names": [
+          "value",
+          "lower",
+          "upper"
+        ],
+        "expected_type": "integer",
+        "specification": "Return value constrained to the inclusive interval from lower through upper. Assume lower is less than or equal to upper.",
+        "buggy_source": "def clamp(value, lower, upper):\n    return max(lower, min(value, upper - 1))"
+      },
+      "cases": [
+        {
+          "generated_test": {
+            "name": "value within bounds — passes through unchanged",
+            "args": [
+              5,
+              0,
+              10
+            ],
+            "expected": 5,
+            "reason": "Normal case: value is strictly between lower and upper; should return value as-is."
+          },
+          "evaluation": {
+            "runnable": true,
+            "reference_result": 5,
+            "buggy_result": 5,
+            "expected_is_correct": true,
+            "detects_bug": false,
+            "error": null
+          }
+        },
+        {
+          "generated_test": {
+            "name": "value equals lower boundary — returns lower",
+            "args": [
+              3,
+              3,
+              10
+            ],
+            "expected": 3,
+            "reason": "Boundary case: value == lower. Both spec and implementation agree; expected = lower."
+          },
+          "evaluation": {
+            "runnable": true,
+            "reference_result": 3,
+            "buggy_result": 3,
+            "expected_is_correct": true,
+            "detects_bug": false,
+            "error": null
+          }
+        },
+        {
+          "generated_test": {
+            "name": "value equals upper boundary — should return upper (spec), not upper-1",
+            "args": [
+              7,
+              0,
+              7
+            ],
+            "expected": 7,
+            "reason": "Boundary case: value == upper. Spec requires inclusive interval [lower, upper]; buggy impl returns 6."
+          },
+          "evaluation": {
+            "runnable": true,
+            "reference_result": 7,
+            "buggy_result": 6,
+            "expected_is_correct": true,
+            "detects_bug": true,
+            "error": null
+          }
+        },
+        {
+          "generated_test": {
+            "name": "value above upper — should clamp to upper",
+            "args": [
+              15,
+              0,
+              10
+            ],
+            "expected": 10,
+            "reason": "Above-boundary case: value > upper. Spec clamps to upper; buggy impl clamps to 9."
+          },
+          "evaluation": {
+            "runnable": true,
+            "reference_result": 10,
+            "buggy_result": 9,
+            "expected_is_correct": true,
+            "detects_bug": true,
+            "error": null
+          }
+        },
+        {
+          "generated_test": {
+            "name": "value below lower — should clamp to lower",
+            "args": [
+              -5,
+              0,
+              10
+            ],
+            "expected": 0,
+            "reason": "Below-boundary case: value < lower. Both spec and implementation agree; expected = lower."
+          },
+          "evaluation": {
+            "runnable": true,
+            "reference_result": 0,
+            "buggy_result": 0,
+            "expected_is_correct": true,
+            "detects_bug": false,
+            "error": null
+          }
+        }
+      ],
+      "elapsed_seconds": 7.252,
+      "usage": {
+        "completion_tokens": 672,
+        "prompt_tokens": 130,
+        "total_tokens": 802,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 302,
+          "rejected_prediction_tokens": null,
+          "text_tokens": null
+        },
+        "prompt_tokens_details": null
+      },
+      "caught_planted_bug": true,
+      "error": null
+    }
+  ],
+  "summary": {
+    "total_tasks": 2,
+    "completed_tasks": 2,
+    "tasks_that_caught_planted_bug": 2,
+    "generated_cases": 10,
+    "runnable_cases": 10,
+    "cases_with_correct_expected_value": 10,
+    "bug_detecting_cases": 4,
+    "elapsed_seconds": 16.355,
+    "total_tokens": 1710,
+    "marginal_hosted_api_cost_usd": 0
+  }
+}
