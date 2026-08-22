@@ -1,0 +1,475 @@
+{
+  "exercise": "local_first_escalation",
+  "local_backend": {
+    "base_url": "http://127.0.0.1:1234/v1",
+    "model": "ornith-1.0-9b"
+  },
+  "hosted_backend": {
+    "model": "gpt-5.4-nano",
+    "api_key_configured": true,
+    "pricing_assumption_usd_per_million_tokens": {
+      "input": 0.2,
+      "output": 1.25
+    }
+  },
+  "benchmark_note": "The run called the hosted model for every case to measure an all-hosted baseline. Projected local-first cost counts only cases that the routing policy selected for escalation.",
+  "cases": [
+    {
+      "request": {
+        "request_id": "DEV-101",
+        "text": "Correct one spelling mistake in static tooltip text on the account settings page. No logic or design changes are involved.",
+        "expected_category": "routine"
+      },
+      "local": {
+        "elapsed_seconds": 9.574,
+        "usage": {
+          "completion_tokens": 824,
+          "prompt_tokens": 127,
+          "total_tokens": 951,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 753,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens_details": null
+        },
+        "raw_assessment": {
+          "request_id": "DEV-101",
+          "category": "routine",
+          "recommendation": "Approve as routine; assign to developer for immediate tooltip string correction and build verification.",
+          "confidence": 0.95,
+          "requires_expert_review": false
+        },
+        "assessment": {
+          "request_id": "DEV-101",
+          "category": "routine",
+          "recommendation": "Approve as routine; assign to developer for immediate tooltip string correction and build verification.",
+          "confidence": 0.95,
+          "requires_expert_review": false
+        },
+        "normalizations": [],
+        "schema_valid": true,
+        "category_correct": true,
+        "error": null
+      },
+      "routing": {
+        "selected_backend": "local",
+        "reasons": [
+          "valid routine result met the local acceptance policy"
+        ]
+      },
+      "hosted_baseline": {
+        "elapsed_seconds": 1.275,
+        "usage": {
+          "completion_tokens": 64,
+          "prompt_tokens": 186,
+          "total_tokens": 250,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 0,
+            "audio_tokens": 0,
+            "reasoning_tokens": 0,
+            "rejected_prediction_tokens": 0,
+            "text_tokens": null
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": null,
+            "cached_tokens": 0,
+            "image_tokens": null,
+            "text_tokens": null
+          }
+        },
+        "raw_assessment": {
+          "request_id": "DEV-101",
+          "category": "routine",
+          "recommendation": "Fix the spelling in the specified static tooltip text and verify the change renders correctly across the relevant locales/screens without affecting any other UI elements.",
+          "confidence": 0.96,
+          "requires_expert_review": false
+        },
+        "assessment": {
+          "request_id": "DEV-101",
+          "category": "routine",
+          "recommendation": "Fix the spelling in the specified static tooltip text and verify the change renders correctly across the relevant locales/screens without affecting any other UI elements.",
+          "confidence": 0.96,
+          "requires_expert_review": false
+        },
+        "normalizations": [],
+        "schema_valid": true,
+        "category_correct": true,
+        "estimated_cost_usd": 0.0001172,
+        "error": null
+      }
+    },
+    {
+      "request": {
+        "request_id": "DEV-102",
+        "text": "Add docstrings to five small internal string helper functions.",
+        "expected_category": "routine"
+      },
+      "local": {
+        "elapsed_seconds": 9.836,
+        "usage": {
+          "completion_tokens": 896,
+          "prompt_tokens": 116,
+          "total_tokens": 1012,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 851,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens_details": null
+        },
+        "raw_assessment": {
+          "request_id": "DEV-102",
+          "category": "routine",
+          "recommendation": "routine",
+          "confidence": 1.0,
+          "requires_expert_review": false
+        },
+        "assessment": {
+          "request_id": "DEV-102",
+          "category": "routine",
+          "recommendation": "routine",
+          "confidence": 1.0,
+          "requires_expert_review": false
+        },
+        "normalizations": [],
+        "schema_valid": true,
+        "category_correct": true,
+        "error": null
+      },
+      "routing": {
+        "selected_backend": "local",
+        "reasons": [
+          "valid routine result met the local acceptance policy"
+        ]
+      },
+      "hosted_baseline": {
+        "elapsed_seconds": 0.872,
+        "usage": {
+          "completion_tokens": 61,
+          "prompt_tokens": 175,
+          "total_tokens": 236,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 0,
+            "audio_tokens": 0,
+            "reasoning_tokens": 0,
+            "rejected_prediction_tokens": 0,
+            "text_tokens": null
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": null,
+            "cached_tokens": 0,
+            "image_tokens": null,
+            "text_tokens": null
+          }
+        },
+        "raw_assessment": {
+          "request_id": "DEV-102",
+          "category": "routine",
+          "recommendation": "Add clear docstrings describing each function’s purpose, parameters, return values, and any edge-case behavior without changing implementation.",
+          "confidence": 0.94,
+          "requires_expert_review": false
+        },
+        "assessment": {
+          "request_id": "DEV-102",
+          "category": "routine",
+          "recommendation": "Add clear docstrings describing each function’s purpose, parameters, return values, and any edge-case behavior without changing implementation.",
+          "confidence": 0.94,
+          "requires_expert_review": false
+        },
+        "normalizations": [],
+        "schema_valid": true,
+        "category_correct": true,
+        "estimated_cost_usd": 0.00011125,
+        "error": null
+      }
+    },
+    {
+      "request": {
+        "request_id": "SEC-201",
+        "text": "Review an authentication flow where changing an account ID in the URL may expose another customer's profile.",
+        "expected_category": "security"
+      },
+      "local": {
+        "elapsed_seconds": 11.105,
+        "usage": {
+          "completion_tokens": 1021,
+          "prompt_tokens": 124,
+          "total_tokens": 1145,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 941,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens_details": null
+        },
+        "raw_assessment": {
+          "request_id": "SEC-201",
+          "category": "security",
+          "recommendation": "Implement server-side authorization checks ensuring the requesting user can only access their own profile data, regardless of the account ID provided in the URL.",
+          "confidence": 0.9,
+          "requires_expert_review": true
+        },
+        "assessment": {
+          "request_id": "SEC-201",
+          "category": "security",
+          "recommendation": "Implement server-side authorization checks ensuring the requesting user can only access their own profile data, regardless of the account ID provided in the URL.",
+          "confidence": 0.9,
+          "requires_expert_review": true
+        },
+        "normalizations": [],
+        "schema_valid": true,
+        "category_correct": true,
+        "error": null
+      },
+      "routing": {
+        "selected_backend": "hosted",
+        "reasons": [
+          "security is an always-escalate category",
+          "local model requested expert review"
+        ]
+      },
+      "hosted_baseline": {
+        "elapsed_seconds": 0.969,
+        "usage": {
+          "completion_tokens": 79,
+          "prompt_tokens": 182,
+          "total_tokens": 261,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 0,
+            "audio_tokens": 0,
+            "reasoning_tokens": 0,
+            "rejected_prediction_tokens": 0,
+            "text_tokens": null
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": null,
+            "cached_tokens": 0,
+            "image_tokens": null,
+            "text_tokens": null
+          }
+        },
+        "raw_assessment": {
+          "request_id": "SEC-201",
+          "category": "security",
+          "recommendation": "Eliminate Insecure Direct Object Reference by enforcing server-side authorization checks for every request tied to the account ID (ignore/validate URL IDs against the authenticated user/session), and add tests to prevent cross-account access.",
+          "confidence": 0.9,
+          "requires_expert_review": true
+        },
+        "assessment": {
+          "request_id": "SEC-201",
+          "category": "security",
+          "recommendation": "Eliminate Insecure Direct Object Reference by enforcing server-side authorization checks for every request tied to the account ID (ignore/validate URL IDs against the authenticated user/session), and add tests to prevent cross-account access.",
+          "confidence": 0.9,
+          "requires_expert_review": true
+        },
+        "normalizations": [],
+        "schema_valid": true,
+        "category_correct": true,
+        "estimated_cost_usd": 0.00013515,
+        "error": null
+      }
+    },
+    {
+      "request": {
+        "request_id": "FIN-301",
+        "text": "Recommend a fix for checkout retries that can create duplicate customer charges after a network timeout.",
+        "expected_category": "financial"
+      },
+      "local": {
+        "elapsed_seconds": 8.388,
+        "usage": {
+          "completion_tokens": 766,
+          "prompt_tokens": 122,
+          "total_tokens": 888,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 687,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens_details": null
+        },
+        "raw_assessment": {
+          "request_id": "FIN-301",
+          "category": "security",
+          "recommendation": "Implement idempotency keys on checkout requests and enforce optimistic locking or transaction state checks before processing retries to prevent duplicate charges.",
+          "confidence": 0.95,
+          "requires_expert_review": true
+        },
+        "assessment": {
+          "request_id": "FIN-301",
+          "category": "security",
+          "recommendation": "Implement idempotency keys on checkout requests and enforce optimistic locking or transaction state checks before processing retries to prevent duplicate charges.",
+          "confidence": 0.95,
+          "requires_expert_review": true
+        },
+        "normalizations": [],
+        "schema_valid": true,
+        "category_correct": false,
+        "error": null
+      },
+      "routing": {
+        "selected_backend": "hosted",
+        "reasons": [
+          "security is an always-escalate category",
+          "local model requested expert review"
+        ]
+      },
+      "hosted_baseline": {
+        "elapsed_seconds": 1.054,
+        "usage": {
+          "completion_tokens": 79,
+          "prompt_tokens": 181,
+          "total_tokens": 260,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 0,
+            "audio_tokens": 0,
+            "reasoning_tokens": 0,
+            "rejected_prediction_tokens": 0,
+            "text_tokens": null
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": null,
+            "cached_tokens": 0,
+            "image_tokens": null,
+            "text_tokens": null
+          }
+        },
+        "raw_assessment": {
+          "request_id": "FIN-301",
+          "category": "financial",
+          "recommendation": "Implement idempotent checkout/charge processing (e.g., enforce a unique idempotency key per order/attempt and deduplicate payments server-side) and verify charge status before creating new charges after timeouts.",
+          "confidence": 0.86,
+          "requires_expert_review": true
+        },
+        "assessment": {
+          "request_id": "FIN-301",
+          "category": "financial",
+          "recommendation": "Implement idempotent checkout/charge processing (e.g., enforce a unique idempotency key per order/attempt and deduplicate payments server-side) and verify charge status before creating new charges after timeouts.",
+          "confidence": 0.86,
+          "requires_expert_review": true
+        },
+        "normalizations": [],
+        "schema_valid": true,
+        "category_correct": true,
+        "estimated_cost_usd": 0.00013495,
+        "error": null
+      }
+    },
+    {
+      "request": {
+        "request_id": "ARCH-401",
+        "text": "Choose a data consistency strategy for a new multi-region order system with regional failover.",
+        "expected_category": "architecture"
+      },
+      "local": {
+        "elapsed_seconds": 8.94,
+        "usage": {
+          "completion_tokens": 823,
+          "prompt_tokens": 122,
+          "total_tokens": 945,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": null,
+            "audio_tokens": null,
+            "reasoning_tokens": 751,
+            "rejected_prediction_tokens": null,
+            "text_tokens": null
+          },
+          "prompt_tokens_details": null
+        },
+        "raw_assessment": {
+          "request_id": "ARCH-401",
+          "category": "architecture",
+          "recommendation": "Expert review required; this involves high-stakes distributed system trade-offs beyond routine mechanical changes.",
+          "confidence": 0.95,
+          "requires_expert_review": true
+        },
+        "assessment": {
+          "request_id": "ARCH-401",
+          "category": "architecture",
+          "recommendation": "Expert review required; this involves high-stakes distributed system trade-offs beyond routine mechanical changes.",
+          "confidence": 0.95,
+          "requires_expert_review": true
+        },
+        "normalizations": [],
+        "schema_valid": true,
+        "category_correct": true,
+        "error": null
+      },
+      "routing": {
+        "selected_backend": "hosted",
+        "reasons": [
+          "architecture is an always-escalate category",
+          "local model requested expert review"
+        ]
+      },
+      "hosted_baseline": {
+        "elapsed_seconds": 1.0,
+        "usage": {
+          "completion_tokens": 75,
+          "prompt_tokens": 181,
+          "total_tokens": 256,
+          "completion_tokens_details": {
+            "accepted_prediction_tokens": 0,
+            "audio_tokens": 0,
+            "reasoning_tokens": 0,
+            "rejected_prediction_tokens": 0,
+            "text_tokens": null
+          },
+          "prompt_tokens_details": {
+            "audio_tokens": 0,
+            "cache_write_tokens": null,
+            "cached_tokens": 0,
+            "image_tokens": null,
+            "text_tokens": null
+          }
+        },
+        "raw_assessment": {
+          "request_id": "ARCH-401",
+          "category": "architecture",
+          "recommendation": "Select and document a multi-region consistency model (e.g., strong consistency via consensus vs. eventual consistency with conflict resolution), then define failover, replication, and write/read routing behaviors accordingly.",
+          "confidence": 0.9,
+          "requires_expert_review": true
+        },
+        "assessment": {
+          "request_id": "ARCH-401",
+          "category": "architecture",
+          "recommendation": "Select and document a multi-region consistency model (e.g., strong consistency via consensus vs. eventual consistency with conflict resolution), then define failover, replication, and write/read routing behaviors accordingly.",
+          "confidence": 0.9,
+          "requires_expert_review": true
+        },
+        "normalizations": [],
+        "schema_valid": true,
+        "category_correct": true,
+        "estimated_cost_usd": 0.00012995,
+        "error": null
+      }
+    }
+  ],
+  "summary": {
+    "total_cases": 5,
+    "accepted_locally": 2,
+    "escalated_to_hosted": 3,
+    "local_schema_valid_cases": 5,
+    "local_category_correct_cases": 4,
+    "hosted_completed_cases": 5,
+    "hosted_category_correct_cases": 5,
+    "measured_all_hosted_cost_usd": 0.0006285,
+    "projected_local_first_hosted_cost_usd": 0.00040005,
+    "projected_hosted_cost_avoided_usd": 0.00022845,
+    "projected_hosted_requests_avoided": 2,
+    "local_cost_note": "Local hardware, electricity, and maintenance costs are not included in the token-price comparison."
+  }
+}
